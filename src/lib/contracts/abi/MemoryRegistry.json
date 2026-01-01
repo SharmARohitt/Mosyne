@@ -1,0 +1,15 @@
+[
+  "function registerPattern(bytes32 patternHash, string memory name, string memory description, uint8 severity, string memory category) external",
+  "function queryPattern(bytes32 patternHash) external view returns (tuple(bytes32 patternHash, string name, string description, uint8 severity, uint256 occurrences, uint256 firstSeen, uint256 lastSeen, string category, bool isActive))",
+  "function recordPatternOccurrence(bytes32 patternHash, address detectedAddress) external",
+  "function getPatternHistory(address addr) external view returns (bytes32[] memory)",
+  "function getAllPatternHashes() external view returns (bytes32[] memory)",
+  "function getPatternCount() external view returns (uint256)",
+  "function patternExists(bytes32 patternHash) external view returns (bool)",
+  "function togglePatternActive(bytes32 patternHash) external",
+  "event PatternDetected(bytes32 indexed patternHash, address indexed detectedAddress, uint8 severity, uint256 timestamp)",
+  "event ThreatBlocked(bytes32 indexed patternHash, address indexed blockedAddress, address indexed user, uint256 timestamp)",
+  "event MemoryAdded(bytes32 indexed patternHash, string name, uint8 severity, string category, uint256 timestamp)",
+  "event PatternOccurrence(bytes32 indexed patternHash, uint256 newOccurrenceCount, uint256 timestamp)"
+]
+

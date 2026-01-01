@@ -1,0 +1,103 @@
+name: mosyne-indexer
+namespace: default
+
+description: MOSYNE Collective On-Chain Memory Engine Indexer
+
+# Network configuration
+networks:
+  - chain:
+      id: 11155111  # Sepolia testnet
+      rpcUrl: ${RPC_URL}
+    startBlock: 0  # Start from genesis or specific block
+    contracts:
+      - name: MemoryRegistry
+        address: ${MEMORY_REGISTRY_ADDRESS}
+      - name: RiskOracle
+        address: ${RISK_ORACLE_ADDRESS}
+      - name: PermissionManager
+        address: ${PERMISSION_MANAGER_ADDRESS}
+      - name: ERC20
+        abi: erc20.abi.json
+        # Track all ERC20 Approval events
+        events:
+          - name: Approval
+            handler: handleApproval
+
+# Data sources
+datasources:
+  - kind: ethereum/contract
+    name: MemoryRegistry
+    network: sepolia
+    source:
+      address: ${MEMORY_REGISTRY_ADDRESS}
+      abi: MemoryRegistry
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MemoryPattern
+        - PatternOccurrence
+      abis:
+        - name: MemoryRegistry
+          file: ./abis/MemoryRegistry.json
+      eventHandlers:
+        - event: PatternDetected(indexed bytes32,indexed address,uint8,uint256)
+          handler: handlePatternDetected
+        - event: ThreatBlocked(indexed bytes32,indexed address,indexed address,uint256)
+          handler: handleThreatBlocked
+        - event: MemoryAdded(indexed bytes32,string,uint8,string,uint256)
+          handler: handleMemoryAdded
+        - event: PatternOccurrence(indexed bytes32,uint256,uint256)
+          handler: handlePatternOccurrence
+
+  - kind: ethereum/contract
+    name: RiskOracle
+    network: sepolia
+    source:
+      address: ${RISK_ORACLE_ADDRESS}
+      abi: RiskOracle
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - WalletRisk
+      abis:
+        - name: RiskOracle
+          file: ./abis/RiskOracle.json
+      eventHandlers:
+        - event: RiskScoreUpdated(indexed address,uint8,uint256)
+          handler: handleRiskScoreUpdated
+        - event: RiskDataUpdated(indexed address,uint256,uint256,uint256)
+          handler: handleRiskDataUpdated
+
+  - kind: ethereum/contract
+    name: PermissionManager
+    network: sepolia
+    source:
+      address: ${PERMISSION_MANAGER_ADDRESS}
+      abi: PermissionManager
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Permission
+      abis:
+        - name: PermissionManager
+          file: ./abis/PermissionManager.json
+      eventHandlers:
+        - event: PermissionGranted(indexed address,indexed address,uint8,indexed bytes32,uint256)
+          handler: handlePermissionGranted
+        - event: PermissionRevoked(indexed address,indexed address,indexed bytes32,string)
+          handler: handlePermissionRevoked
+
+# HyperSync configuration for fast historical queries
+hyperSync:
+  enabled: true
+  blockBatchSize: 1000
+

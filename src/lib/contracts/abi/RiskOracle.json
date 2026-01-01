@@ -1,0 +1,11 @@
+[
+  "function getRiskScore(address addr) external view returns (uint8)",
+  "function updateRiskData(address addr, uint256 totalTxs, uint256 flaggedTxs) external",
+  "function isHighRisk(address addr) external view returns (bool)",
+  "function getRiskData(address addr) external view returns (tuple(uint8 riskScore, uint256 lastUpdate, uint256 totalTransactions, uint256 flaggedTransactions, bytes32[] threatPatterns))",
+  "function getTrackedAddressCount() external view returns (uint256)",
+  "function HIGH_RISK_THRESHOLD() external pure returns (uint8)",
+  "event RiskScoreUpdated(address indexed addr, uint8 newRiskScore, uint256 timestamp)",
+  "event RiskDataUpdated(address indexed addr, uint256 totalTransactions, uint256 flaggedTransactions, uint256 timestamp)"
+]
+

@@ -1,0 +1,14 @@
+[
+  "function grantPermission(address target, uint8 permissionType, uint256 expiresAt) external",
+  "function revokePermission(address target, string memory reason) external",
+  "function checkPermission(address user, address target) external view returns (bool)",
+  "function checkPermissionRisk(address user, address target) external view returns (bool allowed, uint8 riskScore)",
+  "function autoRevokeIfHighRisk(address user, address target) external",
+  "function getUserPermissions(address user) external view returns (address[] memory)",
+  "function getPermission(address user, address target) external view returns (tuple(address user, address target, uint8 permissionType, bool isActive, uint256 grantedAt, uint256 expiresAt, bytes32 patternHash))",
+  "function cleanupExpiredPermission(address user, address target) external",
+  "event PermissionGranted(address indexed user, address indexed target, uint8 permissionType, bytes32 indexed permissionHash, uint256 expiresAt)",
+  "event PermissionRevoked(address indexed user, address indexed target, bytes32 indexed permissionHash, string reason)",
+  "event PermissionRiskChecked(address indexed user, address indexed target, uint8 riskScore, bool allowed)"
+]
+

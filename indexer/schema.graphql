@@ -1,0 +1,88 @@
+type MemoryPattern @entity {
+  id: ID! # patternHash
+  patternHash: Bytes!
+  name: String!
+  description: String!
+  severity: Int!
+  occurrences: BigInt!
+  firstSeen: BigInt!
+  lastSeen: BigInt!
+  category: String!
+  isActive: Boolean!
+  occurrencesList: [PatternOccurrence!]! @derivedFrom(field: "pattern")
+}
+
+type PatternOccurrence @entity {
+  id: ID! # patternHash-txHash-logIndex
+  pattern: MemoryPattern!
+  patternHash: Bytes!
+  detectedAddress: Bytes!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  severity: Int!
+}
+
+type Transaction @entity {
+  id: ID! # transaction hash
+  hash: Bytes!
+  from: Bytes!
+  to: Bytes!
+  value: BigInt!
+  riskScore: Int!
+  matchedPatterns: [MemoryPattern!]!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  status: String! # pending, success, failed
+  type: String! # transfer, swap, approve, etc.
+  gasUsed: BigInt
+  gasPrice: BigInt
+}
+
+type WalletRisk @entity {
+  id: ID! # wallet address
+  address: Bytes!
+  riskScore: Int!
+  totalTransactions: BigInt!
+  flaggedTransactions: BigInt!
+  lastUpdate: BigInt!
+  lastActivity: BigInt!
+  threatPatterns: [Bytes!]! # Array of pattern hashes
+  riskHistory: [RiskScoreUpdate!]! @derivedFrom(field: "wallet")
+}
+
+type RiskScoreUpdate @entity {
+  id: ID! # wallet-timestamp
+  wallet: WalletRisk!
+  riskScore: Int!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+}
+
+type Permission @entity {
+  id: ID! # permissionHash
+  permissionHash: Bytes!
+  user: Bytes!
+  target: Bytes!
+  permissionType: String! # APPROVE, PERMIT, SET_APPROVAL, CUSTOM
+  isActive: Boolean!
+  grantedAt: BigInt!
+  expiresAt: BigInt
+  revokedAt: BigInt
+  revokeReason: String
+  patternHash: Bytes # Associated pattern if any
+}
+
+type ApprovalEvent @entity {
+  id: ID! # txHash-logIndex
+  owner: Bytes!
+  spender: Bytes!
+  value: BigInt!
+  token: Bytes!
+  transactionHash: Bytes!
+  blockNumber: BigInt!
+  timestamp: BigInt!
+  riskScore: Int
+  matchedPatterns: [MemoryPattern!]!
+}
+
