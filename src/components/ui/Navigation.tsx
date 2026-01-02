@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ConnectWalletButton } from './Buttons';
 import { PulseIndicator } from './Cards';
+import { useWallet } from '@/lib/wallet/provider';
 import {
   Brain,
   LayoutDashboard,
@@ -175,19 +176,19 @@ interface TopBarProps {
 }
 
 export function TopBar({ onMenuClick }: TopBarProps) {
-  const [isConnected, setIsConnected] = useState(false);
-  const [address, setAddress] = useState<string>();
   const [searchFocused, setSearchFocused] = useState(false);
+  const { address, isConnected, connect, disconnect } = useWallet();
 
-  const handleConnect = () => {
-    // Simulate wallet connection
-    setIsConnected(true);
-    setAddress('0x742d35Cc6634C0532925a3b844Bc9e7595f8e5A1');
+  const handleConnect = async () => {
+    try {
+      await connect();
+    } catch (error) {
+      console.error('Failed to connect wallet:', error);
+    }
   };
 
   const handleDisconnect = () => {
-    setIsConnected(false);
-    setAddress(undefined);
+    disconnect();
   };
 
   return (
