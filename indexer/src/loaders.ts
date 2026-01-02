@@ -8,3 +8,4 @@ import { BigInt } from "@graphprotocol/graph-ts";
 // Envio/GraphQL handles most of this automatically, but custom loaders
 // can be added here for complex batch operations
 
+

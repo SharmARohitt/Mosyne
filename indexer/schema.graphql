@@ -86,3 +86,4 @@ type ApprovalEvent @entity {
   matchedPatterns: [MemoryPattern!]!
 }
 
+

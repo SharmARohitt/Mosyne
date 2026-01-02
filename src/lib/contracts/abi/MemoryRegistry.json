@@ -13,3 +13,4 @@
   "event PatternOccurrence(bytes32 indexed patternHash, uint256 newOccurrenceCount, uint256 timestamp)"
 ]
 
+

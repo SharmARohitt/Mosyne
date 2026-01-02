@@ -430,3 +430,4 @@ export const GET_PATTERN_OCCURRENCES_QUERY = `
   }
 `;
 
+
